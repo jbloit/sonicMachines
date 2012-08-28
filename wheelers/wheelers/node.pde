@@ -4,15 +4,18 @@ class Node{
   float r; // radius
   float s; //size 
   float rv; // rotation velocity
+  float x,y;
   int nbTicks;
 
-  float tickAngle; // delta angle 
-  float tickWindow; // tick detection
+  float tickAngle;       // delta angle 
+  float tickWindow;      // tick detection
   boolean isTicking;
   boolean wasTicking;
   color nodeColor;
   color[] nodePalette;
   int tone;
+  
+  boolean inEditMode = false;
  
    Node(int _radius, int _size){
      a = random(0, 2*PI); // initial phase
@@ -37,9 +40,13 @@ class Node{
     // nbTicks = 12;
      tickAngle = 2*PI / nbTicks; 
   }
- 
- 
   
+  void setRadius(float _radius){
+    r = _radius;
+    nbTicks = ceil(r * tempoFactor);
+    tickAngle = 2*PI / nbTicks; 
+  }
+
   void setNodePalette(int _paletteIndex){
     nodePalette = (color[]) palettes.get(_paletteIndex);
     nodeColor = nodePalette[tone];
@@ -62,6 +69,9 @@ class Node{
   void update(){
     
     a +=  rv * dt;
+    x = r * cos(a);
+    y = r * sin(a);
+    
     if ((!wasTicking) && (isTicking))
       this.tick();  
   }
@@ -72,6 +82,12 @@ class Node{
     
     // draw orbit with ticks
      noFill();
+     
+     if (inEditMode)
+     strokeWeight(4);
+     else
+     strokeWeight(1);
+     
      stroke(nodeColor, 200);
      ellipse(0, 0, 2*r, 2*r);
      
@@ -83,7 +99,7 @@ class Node{
      
      isTicking = false;
      for (int i = 0; i < nbTicks; i++){
-       ellipse(r * cos(curTickAngle), r * sin(curTickAngle), 3, 3);
+       ellipse(r * cos(curTickAngle), r * sin(curTickAngle), 5, 5);
        if ( (a % (2*PI)  <  (curTickAngle + tickWindow)) && ( a % (2*PI) >  curTickAngle )) {
          isTicking = true;
        }
@@ -100,7 +116,7 @@ class Node{
       noFill();
       stroke(nodeColor, 100);
     }
-    ellipse(r * cos(a), r * sin(a), 10, 10);
+    ellipse(x, y, 10, 10);
    
    }
 }

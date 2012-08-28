@@ -38,16 +38,24 @@ class Wheel{
       n.update();
     }
   }
-  
-  
+
  
   void draw(){
     
     pushMatrix();
     translate(x , y);
+    float x1 = 0;
+    float y1 = 0;
     for (int i = 0; i < nodes.size(); i++){
       Node n = (Node) nodes.get(i);
       n.draw();
+      alpha(256);
+      strokeWeight(3);
+      //line(x1, y1, n.x, n.y);
+      line(0, 0, n.x, n.y);
+      x1 = n.x;
+      y1 = n.y;
+      
     }
     
     popMatrix();

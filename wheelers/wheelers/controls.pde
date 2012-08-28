@@ -12,6 +12,33 @@ void newNode(){
   }
 }
 
+// remove last created node
+void killNode(){
+  println("remove last node");
+  if (newWheel != null) {
+    println("newWheel size : " + newWheel.nodes.size());
+    if (newWheel.nodes.size() > 0){
+      newWheel.nodes.remove(newWheel.nodes.size() - 1) ;
+    }else 
+      println("newWheel has no nodes to remove");
+  }
+}
+
+// toggle edit mode for last created node
+void editNode(){
+  if (newWheel != null) {
+    if (newWheel.nodes.size() > 0){
+      nodeToEdit = (Node) newWheel.nodes.get(newWheel.nodes.size() - 1);
+      if (nodeToEdit.inEditMode) {
+         nodeToEdit.inEditMode = false;
+        }
+        else {
+          nodeToEdit.inEditMode = true;
+      }
+    }   
+  }
+}
+
 void setTempoFactor(float f){
   println("called setTempo" + f);
   tempoFactor = f;
