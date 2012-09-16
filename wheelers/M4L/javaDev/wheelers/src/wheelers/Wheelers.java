@@ -6,6 +6,7 @@ package wheelers;
 
 import com.cycling74.max.*;
 import java.util.ArrayList;
+import com.cycling74.jitter.*;
 
 /**
  *
@@ -19,30 +20,35 @@ public class Wheelers extends MaxObject {
     private double dt;
     private double currTime;
     private double lastTime;
+    public final JitterObject render;
+    public JitterObject sketch;
 
-    public Wheelers() {
+    public Wheelers(Atom[] args) {
+
+        if (args.length < 1) {
+            bail("Wheelers : must supply the name of a pwindow as an argument.");
+            render = null;
+            return;
+        }
+
 
         declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
         declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
         declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
         createInfoOutlet(false);
+        
 
         qelem = new MaxQelem(new Callback(this, "draw"));
 
-        
-        
-        
+        // create our render object for our context
+        render = new JitterObject("jit.gl.render", new Atom[]{args[0]});
+        render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
+        sketch = new JitterObject("jit.gl.sketch",new Atom[]{args[0]});
         currTime = System.currentTimeMillis();
         lastTime = currTime;
-        
-
         dt = 0;
         tempoFactor = 4f;
         aWheel = new Wheel(this);
-        
-
-
-
     }
 
     public void bang() {
@@ -60,6 +66,11 @@ public class Wheelers extends MaxObject {
          MaxQelem qelem in the construtctor
          */
     }
+    
+    public void setTempoFactor(int tf){
+        tempoFactor = tf;
+        aWheel.updateTempoFactor();
+    }
 
     public double getDt() {
         return dt;
@@ -70,8 +81,6 @@ public class Wheelers extends MaxObject {
         currTime = System.currentTimeMillis();
         dt = (currTime - lastTime);
         lastTime = currTime;
-        //outletHigh(1, "dt " + dt);
-
         aWheel.update();
     }
 
@@ -79,6 +88,11 @@ public class Wheelers extends MaxObject {
 
     private void draw() {
         aWheel.draw();
+        
+        render.send("erase");
+        render.send("drawclients");
+        render.send("swap");
+        
 
     }
 
@@ -87,6 +101,10 @@ public class Wheelers extends MaxObject {
         //release the native resources associated
         //with the MaxQuelem object by the Max
         //application. This is very important!!
+        
+        sketch.freePeer();
+        render.freePeer();
+        
     }
 
     // --------------------- Controls ---------------------

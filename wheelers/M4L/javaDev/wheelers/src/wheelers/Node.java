@@ -77,10 +77,14 @@ public class Node {
         for (int i = 0; i < nbTicks; i++) {
             if ((a % (2 * Math.PI) < (curTickAngle + tickWindow)) && (a % (2 * Math.PI) > curTickAngle)) {
                 isTicking = true;
-                
             }
             curTickAngle += tickAngle;
         }
+    }
+    
+    void updateTempoFactor(){
+        nbTicks = (int) Math.ceil(r * maxobj.tempoFactor);
+        tickAngle =  2 * (float)Math.PI / nbTicks;   
     }
     
     void draw(){
@@ -94,7 +98,6 @@ public class Node {
         // draw node
         
         drawCircle(x, y, r, 100);
-        
     }
     
     private void drawCircle(float cx, float cy, float r, int num_segments) {
@@ -104,16 +107,20 @@ public class Node {
         float t;
         float x = r;//we start at angle = 0 
         float y = 0;
-        maxobj.outlet(0, "reset");
-        maxobj.outlet(0, "glcolor 0 1 0 1");
-        maxobj.outlet(0, "glbegin polygon");
+        maxobj.sketch.send("reset");
+        maxobj.sketch.send("glcolor" , new float[] {0, 1, 0, 1});
+        
+        if (isTicking)
+            maxobj.sketch.send("glbegin", "polygon");
+        else
+            maxobj.sketch.send("glbegin", "line_loop");
         for (int ii = 0; ii < num_segments; ii++) {
-            maxobj.outlet(0, "glvertex " + (x + cx) + " " + (y + cy));//output vertex 
+            maxobj.sketch.send("glvertex",  new float[] {(x + cx), (y + cy), 0});//output vertex 
             //apply the rotation matrix
             t = x;
             x = cos * x - sin * y;
             y = sin * t + cos * y;
         }
-        maxobj.outlet(0, "glend");
+        maxobj.sketch.send("glend");
     }
 }
