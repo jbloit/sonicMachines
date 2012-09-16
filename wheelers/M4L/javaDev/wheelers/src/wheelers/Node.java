@@ -58,7 +58,7 @@ public class Node {
     public   void tick(){
         // get audio repitching factor from color value
         float playbackRate = (nodeColor.getRed() + nodeColor.getGreen() + nodeColor.getBlue()) * 2 / 765;
-        maxobj.outletHigh(1, "tick " + (a % 2 * Math.PI) + " " + playbackRate);
+        maxobj.outletHigh(1, "tick " + (a % (2 * Math.PI)) + " " + playbackRate);
   }
   
   
