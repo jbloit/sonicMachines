@@ -17,7 +17,7 @@ public class Wheel {
     public Wheel(Wheelers _parent) {
         maxobj = _parent;
         fill = 0;
-        aNode = new Node(maxobj, 0.1f, 3 );
+        aNode = new Node(maxobj, 0.5f);
         
     }
     

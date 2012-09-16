@@ -87,6 +87,8 @@ public class Wheelers extends MaxObject {
 
 
     private void draw() {
+        sketch.send("reset");
+        
         aWheel.draw();
         
         render.send("erase");

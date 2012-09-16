@@ -55,7 +55,6 @@ class Wheel{
       line(0, 0, n.x, n.y);
       x1 = n.x;
       y1 = n.y;
-      
     }
     
     popMatrix();

@@ -30,6 +30,30 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
+					"id" : "obj-25",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 50.0, 100.0, 75.0, 20.0 ],
+					"text" : "anti-aliasing"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-17",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 408.0, 368.0, 20.0, 20.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-15",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -63,8 +87,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 330.0, 136.0, 215.0, 62.0 ],
-					"text" : "This is a refresh rate, not an animation speed factor. The animation speed is kept indepedant. Think of this as a precision factor."
+					"patching_rect" : [ 330.0, 136.0, 217.0, 62.0 ],
+					"text" : "This is a refresh rate, not an animation speed factor. The animation speed is kept indepedant. Think of this as a precision factor or sample rate."
 				}
 
 			}
@@ -158,7 +182,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 420.0, 368.0, 61.0, 20.0 ],
+					"patching_rect" : [ 420.0, 350.0, 61.0, 20.0 ],
 					"text" : "Hi priority"
 				}
 
@@ -320,7 +344,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 157.0, 430.0, 86.0, 46.0 ],
-					"text" : "mouseidleout -13 -3 0 0 0 0 0 0"
+					"text" : "mouseidleout 220 119 0 0 0 0 0 0"
 				}
 
 			}
@@ -381,6 +405,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-16", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-24", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-17", 0 ]
 				}
 
 			}
@@ -485,7 +518,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-8", 1 ]
