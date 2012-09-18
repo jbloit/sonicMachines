@@ -22,6 +22,9 @@ public class Wheelers extends MaxObject {
     private double lastTime;
     public final JitterObject render;
     public JitterObject sketch;
+    public int width;
+    public int height;
+    private String windowName;
 
     public Wheelers(Atom[] args) {
 
@@ -38,8 +41,9 @@ public class Wheelers extends MaxObject {
         createInfoOutlet(false);
         
 
+        windowName =  args[0].getString();
         qelem = new MaxQelem(new Callback(this, "draw"));
-
+        
         // create our render object for our context
         render = new JitterObject("jit.gl.render", new Atom[]{args[0]});
         render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
@@ -49,6 +53,24 @@ public class Wheelers extends MaxObject {
         dt = 0;
         tempoFactor = 4f;
         aWheel = new Wheel(this);
+        
+        width = 50;
+        height = 50;
+
+    }
+    
+    public void init(){
+        updateSize();
+    }
+    
+    private void updateSize(){
+        // determine size of jit.pwindow
+        MaxBox myWin;
+        myWin = (MaxBox) this.getParentPatcher().getNamedBox(windowName);
+        int[] rect;
+        rect = myWin.getRect();
+        width = (int) (rect[2] - rect[0]);
+        height = (int) (rect[3] - rect[1]);   
     }
 
     public void bang() {
@@ -84,8 +106,6 @@ public class Wheelers extends MaxObject {
         aWheel.update();
     }
 
-
-
     private void draw() {
         sketch.send("reset");
         
@@ -109,6 +129,13 @@ public class Wheelers extends MaxObject {
         
     }
 
+    public void onDrag(float mouseX, float mouseY){   
+        float glX = (mouseX / width) - 0.5f;
+        float glY = -((mouseY / height) - 0.5f) ;
+        //post("mouse gl " + glX + " " + glY);
+        aWheel.setCoord(glX, glY);
+    }
+    
     // --------------------- Controls ---------------------
     public void fill(int f) {
         aWheel.fill = f;
