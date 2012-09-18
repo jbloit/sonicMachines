@@ -12,21 +12,31 @@ import java.util.Random;
 public class Node {
 
     private Wheelers maxobj;
-    private float a; // angle
-    private float orbitRadius; // radius
+    private float a;                    // angle
+    private float orbitRadius;          // radius
     private float nodeRadius;
-    private float rv; // rotation velocity
+    private float rv;                   // rotation velocity
     private float x, y;
+    private float vx, vy;               // The x- and y-axis velocities
+    private float gravity;
+    private float mass;
+    private float stiffness;
+    private float damping;
+    
     int nbTicks;
-    private float tickAngle;       // delta angle 
-    private float tickWindow;      // tick detection
+    private float tickAngle;            // delta angle 
+    private float tickWindow;           // tick detection
     private boolean isTicking;
     private boolean wasTicking;
     private Color nodeColor;
     private int[] nodePalette;
     private int tone;
     public boolean inEditMode = false;
-  
+    
+    private int tatum;
+    private int triggerPeriod;          // how many tatum ticks between notes
+    private float stretch;
+    
     private Random rand;
     
     public Node(Wheelers _maxobj, float _radius) {
@@ -49,11 +59,28 @@ public class Node {
         //nodePalette = (int[]) palettes.get(curPaletteIndex);
         //nodeColor = nodePalette[tone];
         nodeColor = new Color(0.3f, 0.6f, 0.1f, 0.8f);
-        maxobj.post("node const, radius = " + orbitRadius );
-        maxobj.post("node const, tmpfactor = " + maxobj.tempoFactor );
-        maxobj.post("node const, nbTicks = " + nbTicks );
+        
+        mass = 1f;
+        stiffness = 1f;
+        damping = 0.1f;
+        gravity = 0.f;
+        
+        tatum = -1;
+        triggerPeriod = 7;             // sylvain style
+        stretch = 0;
+        
+
     }
     
+    public void setMass(float _mass){
+        mass = _mass;
+    }
+    public void setStiffness(float _stiff) {
+        stiffness = _stiff;
+    }
+    public void setDamping(float _damping) {
+        damping = _damping;
+    }
     
     public   void tick(){
         // get audio repitching factor from color value
@@ -62,23 +89,42 @@ public class Node {
   }
   
   
-    void update() {
+    void update(float targetX, float targetY) {
         // do high priority stuff here, time sensitive...
-        a += rv * maxobj.getDt();
-        x = orbitRadius * (float) Math.cos(a);
-        y = orbitRadius * (float) Math.sin(a);
-        if ((!wasTicking) && (isTicking)) {
-            this.tick();
-        }
-        wasTicking = isTicking;
-        isTicking = false;
-        float curTickAngle = 0;
-        for (int i = 0; i < nbTicks; i++) {
-            if ((a % (2 * Math.PI) < (curTickAngle + tickWindow)) && (a % (2 * Math.PI) > curTickAngle)) {
-                isTicking = true;
+        
+        float xdist = targetX - x;
+        float ydist = targetY - y;
+        // spring motion
+        float forceX = xdist * stiffness;
+        float ax = forceX / mass;
+        vx = (1 - damping )* (vx + ax);
+        x += vx * (maxobj.getDt() / 1000) ;
+        float forceY = ydist * stiffness;
+        forceY += gravity;
+        float ay = forceY / mass;
+        vy = (1 - damping) * (vy + ay);
+        y += vy * (maxobj.getDt() / 1000);
+        
+        // distance between node and target node (or wheel center)
+        stretch = (float) Math.sqrt(xdist*xdist + ydist*ydist);
+        triggerPeriod = (int) Math.abs (Math.exp(-stretch + 4) + 1);
+        
+        
+        maxobj.outlet(0, "triggerPeriod " + triggerPeriod);
+
+        //maxobj.post("x " + x + " y " + y + " dt " + maxobj.getDt() );
+    }
+    
+    // with a new tatum event (smallest beat grid), decide whether to trigger a note, or not.
+    public void newTatum(){
+        tatum++;
+        if (stretch > 0.01f) {
+            if ((tatum % triggerPeriod) == 0) {
+                tick();
+                tatum = 0;
             }
-            curTickAngle += tickAngle;
         }
+        //maxobj.post("strecth " + stretch);
     }
     
     void updateTempoFactor(){
@@ -87,17 +133,7 @@ public class Node {
     }
     
     void draw(){
-        
-        // draw orbit
-        drawCircle(0, 0, orbitRadius, 40, false);
-        
-        
-        // draw ticks
-        float curTickAngle = 0;
-        for (int i = 0; i < nbTicks; i++) {
-            drawCircle(orbitRadius * (float) Math.cos(curTickAngle), orbitRadius * (float) Math.sin(curTickAngle), nodeRadius*0.5f, 30, true);
-            curTickAngle += tickAngle;
-        }
+
         // draw node
         
         drawCircle(x, y, nodeRadius, 20, isTicking);

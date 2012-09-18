@@ -12,7 +12,7 @@ public class Wheel {
 
     private Wheelers maxobj;
     public int fill;
-    private Node aNode;
+    public Node aNode;
     private float x,y;
     
     public Wheel(Wheelers _parent) {
@@ -37,16 +37,17 @@ public class Wheel {
     
     public void update(){
         // in the High priority thread
-        aNode.update();
+        aNode.update(x, y);
     }
     
     public void draw() {
         maxobj.sketch.send("glpushmatrix");
         maxobj.sketch.send("gltranslate", new float[] {x, y, 0f});
         
+        
+        aNode.draw();
         maxobj.sketch.send("glcolor" , new float[] {1, 1, 1, 1});
         drawCircle(0,0,0.1f, 20, true);
-        aNode.draw();
         maxobj.sketch.send("glpopmatrix");
     }
     

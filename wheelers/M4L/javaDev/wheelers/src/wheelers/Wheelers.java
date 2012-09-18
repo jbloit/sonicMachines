@@ -33,8 +33,6 @@ public class Wheelers extends MaxObject {
             render = null;
             return;
         }
-
-
         declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
         declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
         declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
@@ -48,6 +46,7 @@ public class Wheelers extends MaxObject {
         render = new JitterObject("jit.gl.render", new Atom[]{args[0]});
         render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
         sketch = new JitterObject("jit.gl.sketch",new Atom[]{args[0]});
+        
         currTime = System.currentTimeMillis();
         lastTime = currTime;
         dt = 0;
@@ -56,7 +55,6 @@ public class Wheelers extends MaxObject {
         
         width = 50;
         height = 50;
-
     }
     
     public void init(){
@@ -73,6 +71,16 @@ public class Wheelers extends MaxObject {
         height = (int) (rect[3] - rect[1]);   
     }
 
+    public void setMass(float m){
+        aWheel.aNode.setMass(m);
+    }
+    public void setStiffness(float s){
+        aWheel.aNode.setStiffness(s);
+    }    
+    public void setDamping(float d){
+        aWheel.aNode.setDamping(d);
+    }
+    
     public void bang() {
 
         // goal : keep update() in high-priority thread, and draw() in low.
@@ -87,6 +95,10 @@ public class Wheelers extends MaxObject {
          as the qelem function when we created the 
          MaxQelem qelem in the construtctor
          */
+    }
+    
+    public void tatum(){
+        aWheel.aNode.newTatum();
     }
     
     public void setTempoFactor(int tf){
@@ -108,9 +120,7 @@ public class Wheelers extends MaxObject {
 
     private void draw() {
         sketch.send("reset");
-        
         aWheel.draw();
-        
         render.send("erase");
         render.send("drawclients");
         render.send("swap");
