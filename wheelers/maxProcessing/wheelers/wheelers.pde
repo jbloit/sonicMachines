@@ -60,6 +60,7 @@ void draw(){
 
 void mouseDragged(){
   if ((nodeToEdit != null) && (nodeToEdit.inEditMode) ){
+    println("editing with mouse");
     nodeToEdit.setRadius(abs(height/2 - mouseY));
     
   }

@@ -12,18 +12,16 @@ import java.util.Random;
 public class Node {
 
     private Wheelers maxobj;
-    private float a;                    // angle
-    private float orbitRadius;          // radius
-    private float nodeRadius;
+
+    private int index;
     private float rv;                   // rotation velocity
-    private float x, y;
+    public float x, y;
     private float vx, vy;               // The x- and y-axis velocities
     private float gravity;
     private float mass;
     private float stiffness;
     private float damping;
-    
-    int nbTicks;
+
     private float tickAngle;            // delta angle 
     private float tickWindow;           // tick detection
     private boolean isTicking;
@@ -37,30 +35,22 @@ public class Node {
     private int triggerPeriod;          // how many tatum ticks between notes
     private float stretch;
     
+    
+    
     private Random rand;
     
-    public Node(Wheelers _maxobj, float _radius) {
+    public Node(Wheelers _maxobj, int _index) {
         
         maxobj = _maxobj;
         rand = new Random();
-        
-        nodeRadius = 0.1f;
-        a =   rand.nextFloat() * 2 * (float)Math.PI; // initial phase
-        a = 0;
-        orbitRadius = _radius;
-        nbTicks = (int) Math.ceil(orbitRadius * maxobj.tempoFactor);
-        // nbTicks = 12;
-        tickAngle =  2 * (float)Math.PI / nbTicks;
-        rv = 0.0005f;
-        tickWindow = 2 * (float)Math.PI / 100.0f;
-        isTicking = false;
-        wasTicking = false;
+       
+
         tone = (int) Math.floor(rand.nextFloat() * 4.f);
         //nodePalette = (int[]) palettes.get(curPaletteIndex);
         //nodeColor = nodePalette[tone];
-        nodeColor = new Color(0.3f, 0.6f, 0.1f, 0.8f);
+        nodeColor = new Color(0.6f, 0.2f, 0.1f, 0.7f);
         
-        mass = 1f;
+        mass = rand.nextFloat();
         stiffness = 1f;
         damping = 0.1f;
         gravity = 0.f;
@@ -68,8 +58,6 @@ public class Node {
         tatum = -1;
         triggerPeriod = 7;             // sylvain style
         stretch = 0;
-        
-
     }
     
     public void setMass(float _mass){
@@ -85,7 +73,7 @@ public class Node {
     public   void tick(){
         // get audio repitching factor from color value
         float playbackRate = (nodeColor.getRed() + nodeColor.getGreen() + nodeColor.getBlue()) * 2 / 765;
-        maxobj.outletHigh(1, "tick " + (a % (2 * Math.PI)) + " " + playbackRate);
+        maxobj.outletHigh(1, "tick " + " " + index + " " + playbackRate);
   }
   
   
@@ -105,9 +93,13 @@ public class Node {
         vy = (1 - damping) * (vy + ay);
         y += vy * (maxobj.getDt() / 1000);
         
+//        x = targetX;
+//        y = targetY;
+        
         // distance between node and target node (or wheel center)
         stretch = (float) Math.sqrt(xdist*xdist + ydist*ydist);
         triggerPeriod = (int) Math.abs (Math.exp(-stretch + 4) + 1);
+        //triggerPeriod = (int) (-4*stretch)+20;
         
         
         maxobj.outlet(0, "triggerPeriod " + triggerPeriod);
@@ -118,7 +110,7 @@ public class Node {
     // with a new tatum event (smallest beat grid), decide whether to trigger a note, or not.
     public void newTatum(){
         tatum++;
-        if (stretch > 0.01f) {
+        if (stretch > 0.1f) {
             if ((tatum % triggerPeriod) == 0) {
                 tick();
                 tatum = 0;
@@ -128,15 +120,14 @@ public class Node {
     }
     
     void updateTempoFactor(){
-        nbTicks = (int) Math.ceil(orbitRadius * maxobj.tempoFactor);
-        tickAngle =  2 * (float)Math.PI / nbTicks;   
+  
     }
     
     void draw(){
 
         // draw node
         
-        drawCircle(x, y, nodeRadius, 20, isTicking);
+        drawCircle(x, y, mass/5f, 20, true);
     }
     
     private void drawCircle(float cx, float cy, float r, int num_segments, boolean fill) {
@@ -144,20 +135,22 @@ public class Node {
         float cos = (float) Math.cos(theta);//precalculate the sine and cosine
         float sin = (float) Math.sin(theta);
         float t;
-        float x = r;//we start at angle = 0 
-        float y = 0;
-        maxobj.sketch.send("glcolor" , new float[] {0, 1, 0, 1});
+        float anx = r;//we start at angle = 0 
+        float any = 0;
+        maxobj.sketch.send("glcolor" , new float[] {(float)nodeColor.getRed()/255, nodeColor.getGreen()/255, nodeColor.getBlue()/255, nodeColor.getAlpha()/255});
         
-        if (fill)
+        if (fill) {
             maxobj.sketch.send("glbegin", "polygon");
-        else
+        }
+        else {
             maxobj.sketch.send("glbegin", "line_loop");
+        }
         for (int ii = 0; ii < num_segments; ii++) {
-            maxobj.sketch.send("glvertex",  new float[] {(x + cx), (y + cy), 0});//output vertex 
+            maxobj.sketch.send("glvertex",  new float[] {(anx + cx), (any + cy)});//output vertex 
             //apply the rotation matrix
-            t = x;
-            x = cos * x - sin * y;
-            y = sin * t + cos * y;
+            t = anx;
+            anx = cos * anx - sin * any;
+            any = sin * t + cos * any;
         }
         maxobj.sketch.send("glend");
     }

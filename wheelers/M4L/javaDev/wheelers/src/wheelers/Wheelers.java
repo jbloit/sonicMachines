@@ -44,7 +44,6 @@ public class Wheelers extends MaxObject {
         
         // create our render object for our context
         render = new JitterObject("jit.gl.render", new Atom[]{args[0]});
-        render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
         sketch = new JitterObject("jit.gl.sketch",new Atom[]{args[0]});
         
         currTime = System.currentTimeMillis();
@@ -59,6 +58,18 @@ public class Wheelers extends MaxObject {
     
     public void init(){
         updateSize();
+        
+        post("new new init");
+        render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
+        render.setAttr("ortho", 1);
+        sketch.send("glmatrixmode","projection");
+        sketch.send("glloadidentity");
+        sketch.send("glortho",new int[]{0, width, height, 0, 0, 1});
+        sketch.send("glmatrixmode","modelview");
+        sketch.send("gldisable","depth_test");
+        sketch.send("glloadidentity");
+        
+        
     }
     
     private void updateSize(){
@@ -98,13 +109,10 @@ public class Wheelers extends MaxObject {
     }
     
     public void tatum(){
-        aWheel.aNode.newTatum();
+        
+        aWheel.newTatum();
     }
     
-    public void setTempoFactor(int tf){
-        tempoFactor = tf;
-        aWheel.updateTempoFactor();
-    }
 
     public double getDt() {
         return dt;
@@ -140,10 +148,19 @@ public class Wheelers extends MaxObject {
     }
 
     public void onDrag(float mouseX, float mouseY){   
-        float glX = (mouseX / width) - 0.5f;
-        float glY = -((mouseY / height) - 0.5f) ;
+        float glX = (mouseX / width) * 1.62f  - 0.82f;
+        float glY = -((mouseY / height) * 1.7f - 0.85f) ;
         //post("mouse gl " + glX + " " + glY);
         aWheel.setCoord(glX, glY);
+    }
+    
+    public void camera(float x, float y, float z){
+        render.send("camera",new float[]{x,y,z});
+    }
+    
+    public void printCoords(){
+        post("wheel " + aWheel.x + " " + aWheel.y);
+        post("note " + aWheel.aNode.x + " " + aWheel.aNode.y);
     }
     
     // --------------------- Controls ---------------------

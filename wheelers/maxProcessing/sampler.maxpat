@@ -7,7 +7,8 @@
 			"revision" : 4
 		}
 ,
-		"rect" : [ 187.0, 318.0, 640.0, 480.0 ],
+		"rect" : [ 284.0, 75.0, 345.0, 482.0 ],
+		"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -27,6 +28,25 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-8",
+					"maxclass" : "multislider",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 292.0, 270.0, 165.0, 15.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 66.0, 90.0, 180.0, 15.0 ],
+					"setminmax" : [ 0.0, 1.0 ],
+					"setstyle" : 1,
+					"settype" : 0,
+					"size" : 50,
+					"spacing" : 1
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
@@ -151,21 +171,6 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
-					"id" : "obj-18",
-					"linecount" : 4,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 321.0, 254.0, 141.0, 60.0 ],
-					"text" : "1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 0 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 0 0"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-16",
 					"maxclass" : "message",
 					"numinlets" : 2,
@@ -196,7 +201,9 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 239.0, 265.0, 45.0, 45.0 ]
+					"patching_rect" : [ 239.0, 265.0, 45.0, 45.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 276.0, 90.0, 45.0, 45.0 ]
 				}
 
 			}
@@ -206,9 +213,12 @@
 					"maxclass" : "live.gain~",
 					"numinlets" : 2,
 					"numoutlets" : 5,
+					"orientation" : 1,
 					"outlettype" : [ "signal", "signal", "", "float", "list" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 172.0, 254.0, 48.0, 136.0 ],
+					"patching_rect" : [ 172.0, 254.0, 136.0, 49.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 60.0, 110.0, 199.0, 49.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_unitstyle" : 4,
@@ -295,6 +305,8 @@
 					"patching_rect" : [ 423.0, 118.0, 199.0, 20.0 ],
 					"pattrmode" : 1,
 					"prefix" : "Macintosh HD:/Users/bloit/sounds/girlsInHallway/",
+					"presentation" : 1,
+					"presentation_rect" : [ 60.0, 45.0, 261.0, 20.0 ],
 					"types" : "WAVE",
 					"varname" : "wavescanAudioFile"
 				}
@@ -463,15 +475,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 1 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-3", 1 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-5", 1 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -485,6 +488,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-3", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-8", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-3", 1 ]
 				}
 
 			}
@@ -549,7 +561,7 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "samplerVoice.maxpat",
-				"bootpath" : "/Users/bloit/COMPOSITION/girlsInHallway Project/Wheelers_max+Processing",
+				"bootpath" : "/Users/bloit/sonicMachines/wheelers/maxProcessing",
 				"patcherrelativepath" : "",
 				"type" : "JSON",
 				"implicit" : 1

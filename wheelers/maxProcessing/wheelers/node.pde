@@ -42,6 +42,7 @@ class Node{
   }
   
   void setRadius(float _radius){
+    println("calling set radius");
     r = _radius;
     nbTicks = ceil(r * tempoFactor);
     tickAngle = 2*PI / nbTicks; 
