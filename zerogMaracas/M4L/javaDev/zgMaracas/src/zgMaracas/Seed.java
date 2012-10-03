@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package wheelers;
+package zgMaracas;
 import java.awt.Color;
 import java.util.Random;
 /**
  *
  * @author bloit
  */
-public class Node {
+public class Seed {
 
-    private Wheelers maxobj;
+    private Maracas maxobj;
 
     private int index;
     private float rv;                   // rotation velocity
@@ -26,8 +26,8 @@ public class Node {
     private float tickWindow;           // tick detection
     private boolean isTicking;
     private boolean wasTicking;
-    private Color nodeColor;
-    private int[] nodePalette;
+    private Color seedColor;
+    private int[] seedPalette;
     private int tone;
     public boolean inEditMode = false;
     
@@ -39,7 +39,7 @@ public class Node {
     
     private Random rand;
     
-    public Node(Wheelers _maxobj, int _index) {
+    public Seed(Maracas _maxobj, int _index) {
         
         maxobj = _maxobj;
         rand = new Random();
@@ -47,8 +47,8 @@ public class Node {
 
         tone = (int) Math.floor(rand.nextFloat() * 4.f);
         //nodePalette = (int[]) palettes.get(curPaletteIndex);
-        //nodeColor = nodePalette[tone];
-        nodeColor = new Color(0.6f, 0.2f, 0.1f, 0.7f);
+        //nodeColor = seedPalette[tone];
+        seedColor = new Color(0.6f, 0.2f, 0.1f, 0.7f);
         
         mass = rand.nextFloat();
         stiffness = 1f;
@@ -72,7 +72,7 @@ public class Node {
     
     public   void tick(){
         // get audio repitching factor from color value
-        float playbackRate = (nodeColor.getRed() + nodeColor.getGreen() + nodeColor.getBlue()) * 2 / 765;
+        float playbackRate = (seedColor.getRed() + seedColor.getGreen() + seedColor.getBlue()) * 2 / 765;
         maxobj.outletHigh(1, "tick " + " " + index + " " + playbackRate);
   }
   
@@ -137,7 +137,7 @@ public class Node {
         float t;
         float anx = r;//we start at angle = 0 
         float any = 0;
-        maxobj.sketch.send("glcolor" , new float[] {(float)nodeColor.getRed()/255, nodeColor.getGreen()/255, nodeColor.getBlue()/255, nodeColor.getAlpha()/255});
+        maxobj.sketch.send("glcolor" , new float[] {(float)seedColor.getRed()/255, seedColor.getGreen()/255, seedColor.getBlue()/255, seedColor.getAlpha()/255});
         
         if (fill) {
             maxobj.sketch.send("glbegin", "polygon");

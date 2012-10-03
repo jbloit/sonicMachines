@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package wheelers;
+package zgMaracas;
 
 import com.cycling74.max.*;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import com.cycling74.jitter.*;
  *
  * @author bloit
  */
-public class Wheelers extends MaxObject {
+public class Maracas extends MaxObject {
 
     private MaxQelem qelem;
-    private Wheel aWheel;
+    private Shell aWheel;
     public float tempoFactor;
     private double dt;
     private double currTime;
@@ -26,7 +26,7 @@ public class Wheelers extends MaxObject {
     public int height;
     private String windowName;
 
-    public Wheelers(Atom[] args) {
+    public Maracas(Atom[] args) {
 
         if (args.length < 1) {
             bail("Wheelers : must supply the name of a pwindow as an argument.");
@@ -50,7 +50,7 @@ public class Wheelers extends MaxObject {
         lastTime = currTime;
         dt = 0;
         tempoFactor = 4f;
-        aWheel = new Wheel(this);
+        aWheel = new Shell(this);
         
         width = 50;
         height = 50;
@@ -83,13 +83,13 @@ public class Wheelers extends MaxObject {
     }
 
     public void setMass(float m){
-        aWheel.aNode.setMass(m);
+        aWheel.aSeed.setMass(m);
     }
     public void setStiffness(float s){
-        aWheel.aNode.setStiffness(s);
+        aWheel.aSeed.setStiffness(s);
     }    
     public void setDamping(float d){
-        aWheel.aNode.setDamping(d);
+        aWheel.aSeed.setDamping(d);
     }
     
     public void bang() {
@@ -160,7 +160,7 @@ public class Wheelers extends MaxObject {
     
     public void printCoords(){
         post("wheel " + aWheel.x + " " + aWheel.y);
-        post("note " + aWheel.aNode.x + " " + aWheel.aNode.y);
+        post("note " + aWheel.aSeed.x + " " + aWheel.aSeed.y);
     }
     
     // --------------------- Controls ---------------------
@@ -168,18 +168,4 @@ public class Wheelers extends MaxObject {
         aWheel.fill = f;
     }
 
-    public void newWheel() {
-    }
-
-    public void newNode() {
-    }
-
-    public void editNode() {
-    }
-
-    public void setTempoFactor(float f) {
-    }
-
-    public void setPalette(int i) {
-    }
 }

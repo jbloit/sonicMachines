@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package wheelers;
+package zgMaracas;
 
 import java.util.ArrayList;
 
@@ -10,26 +10,26 @@ import java.util.ArrayList;
  *
  * @author bloit
  */
-public class Wheel {
+public class Shell {
 
-    private Wheelers maxobj;
+    private Maracas maxobj;
     public int fill;
-    public ArrayList nodes;
-    public Node aNode;
+    public ArrayList seeds;
+    public Seed aSeed;
     public float x,y;
-    public int nbNodes;
+    public int nbSeeds;
     
-    public Wheel(Wheelers _parent) {
+    public Shell(Maracas _parent) {
         x = 0f;
         y = 0f;
         maxobj = _parent;
         fill = 0;
-        nbNodes = 4;
-        nodes = new ArrayList();
-        for (int i = 0; i < nbNodes; i++){
-            nodes.add(new Node(maxobj, i));
+        nbSeeds = 4;
+        seeds = new ArrayList();
+        for (int i = 0; i < nbSeeds; i++){
+            seeds.add(new Seed(maxobj, i));
         }
-        //aNode = new Node(maxobj, 0);
+        //aNode = new Seed(maxobj, 0);
         
         
     }
@@ -40,9 +40,9 @@ public class Wheel {
     }
 
     public void newTatum() {
-        Node n;
-        for (int i = 0; i < nbNodes; i++) {
-            n = (Node) nodes.get(i);
+        Seed n;
+        for (int i = 0; i < nbSeeds; i++) {
+            n = (Seed) seeds.get(i);
             n.newTatum();
         }
     }
@@ -51,9 +51,9 @@ public class Wheel {
     public void update(){
         // in the High priority thread
       
-        Node n;
-        for (int i = 0; i < nbNodes; i++){
-            n = (Node) nodes.get(i);
+        Seed n;
+        for (int i = 0; i < nbSeeds; i++){
+            n = (Seed) seeds.get(i);
             n.update(x, y);
         }
         
@@ -62,9 +62,9 @@ public class Wheel {
     public void draw() {
         //maxobj.sketch.send("glpushmatrix");
         //maxobj.sketch.send("gltranslate", new float[] {x, y, 0f});
-        Node n;
-        for (int i = 0; i < nbNodes; i++) {
-            n = (Node) nodes.get(i);
+        Seed n;
+        for (int i = 0; i < nbSeeds; i++) {
+            n = (Seed) seeds.get(i);
             n.draw();
         }
         maxobj.sketch.send("glcolor" , new float[] {1, 1, 1, 1});
