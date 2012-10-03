@@ -26,14 +26,14 @@ public class Seed {
     private float tickWindow;           // tick detection
     private boolean isTicking;
     private boolean wasTicking;
-    private Color seedColor;
+    public Color seedColor;
     private int[] seedPalette;
     private int tone;
     public boolean inEditMode = false;
     
     private int tatum;
     private int triggerPeriod;          // how many tatum ticks between notes
-    private float stretch;
+    private float stretch;              // distance to shell center 
     
     
     
@@ -48,7 +48,7 @@ public class Seed {
         tone = (int) Math.floor(rand.nextFloat() * 4.f);
         //nodePalette = (int[]) palettes.get(curPaletteIndex);
         //nodeColor = seedPalette[tone];
-        seedColor = new Color(0.6f, 0.2f, 0.1f, 0.7f);
+        seedColor = new Color(255, 255, 255, 100); // default
         
         mass = rand.nextFloat();
         stiffness = 1f;
@@ -56,7 +56,7 @@ public class Seed {
         gravity = 0.f;
         
         tatum = -1;
-        triggerPeriod = 7;             // sylvain style
+        triggerPeriod = 1;             
         stretch = 0;
     }
     
@@ -70,6 +70,7 @@ public class Seed {
         damping = _damping;
     }
     
+    // send a control event
     public   void tick(){
         // get audio repitching factor from color value
         float playbackRate = (seedColor.getRed() + seedColor.getGreen() + seedColor.getBlue()) * 2 / 765;
@@ -77,6 +78,7 @@ public class Seed {
   }
   
   
+    // UDATE PHYSICS
     void update(float targetX, float targetY) {
         // do high priority stuff here, time sensitive...
         
@@ -93,21 +95,18 @@ public class Seed {
         vy = (1 - damping) * (vy + ay);
         y += vy * (maxobj.getDt() / 1000);
         
-//        x = targetX;
-//        y = targetY;
-        
-        // distance between node and target node (or wheel center)
+        // distance to shell center
         stretch = (float) Math.sqrt(xdist*xdist + ydist*ydist);
+        
+        // trigger more for higher strecth value 
         triggerPeriod = (int) Math.abs (Math.exp(-stretch + 4) + 1);
         //triggerPeriod = (int) (-4*stretch)+20;
-        
-        
+
         maxobj.outlet(0, "triggerPeriod " + triggerPeriod);
 
-        //maxobj.post("x " + x + " y " + y + " dt " + maxobj.getDt() );
     }
     
-    // with a new tatum event (smallest beat grid), decide whether to trigger a note, or not.
+    // with a new tatum event (smallest beat grid), decide whether to trigger a note or not.
     public void newTatum(){
         tatum++;
         if (stretch > 0.1f) {
@@ -124,11 +123,16 @@ public class Seed {
     }
     
     void draw(){
-
-        // draw node
         
         drawCircle(x, y, mass/5f, 20, true);
     }
+    
+    
+    
+    /* ----------------------------
+     *  LOW LEVEL DRAWING 
+     * ----------------------------
+     */
     
     private void drawCircle(float cx, float cy, float r, int num_segments, boolean fill) {
         float theta = 2 * 3.1415926f / (float) num_segments;
@@ -137,7 +141,10 @@ public class Seed {
         float t;
         float anx = r;//we start at angle = 0 
         float any = 0;
-        maxobj.sketch.send("glcolor" , new float[] {(float)seedColor.getRed()/255, seedColor.getGreen()/255, seedColor.getBlue()/255, seedColor.getAlpha()/255});
+      //  maxobj.sketch.send("glcolor" , new float[] {(float)seedColor.getRed(), seedColor.getGreen(), seedColor.getBlue(), seedColor.getAlpha()});
+        
+        maxobj.sketch.send("glcolor" , new float[] {seedColor.getRed()/255f,seedColor.getGreen()/255f,seedColor.getBlue()/255f, seedColor.getAlpha()/255f});
+       
         
         if (fill) {
             maxobj.sketch.send("glbegin", "polygon");

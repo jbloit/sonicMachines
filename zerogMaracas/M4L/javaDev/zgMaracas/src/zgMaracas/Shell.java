@@ -5,6 +5,7 @@
 package zgMaracas;
 
 import java.util.ArrayList;
+import java.awt.Color;
 
 /**
  *
@@ -18,6 +19,8 @@ public class Shell {
     public Seed aSeed;
     public float x,y;
     public int nbSeeds;
+    public Color[] palette;
+    
     
     public Shell(Maracas _parent) {
         x = 0f;
@@ -25,13 +28,22 @@ public class Shell {
         maxobj = _parent;
         fill = 0;
         nbSeeds = 4;
+        
+        palette = new Color[4];
+        palette[0] = new Color (255, 116, 00, 200);
+        palette[1] = new Color (191, 48, 48, 200);
+        palette[2] = new Color (0, 153, 153, 200);
+        palette[3] = new Color (0, 204, 0, 200);
+        
         seeds = new ArrayList();
         for (int i = 0; i < nbSeeds; i++){
-            seeds.add(new Seed(maxobj, i));
-        }
-        //aNode = new Seed(maxobj, 0);
-        
-        
+            
+            Seed s = new Seed(maxobj, i);
+            s.seedColor = palette[i];
+            seeds.add(s);
+            
+            
+        }  
     }
     
     public void setCoord(float _x, float _y){

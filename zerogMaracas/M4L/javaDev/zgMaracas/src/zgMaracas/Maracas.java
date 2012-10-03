@@ -15,7 +15,7 @@ import com.cycling74.jitter.*;
 public class Maracas extends MaxObject {
 
     private MaxQelem qelem;
-    private Shell aWheel;
+    private Shell aShell;
     public float tempoFactor;
     private double dt;
     private double currTime;
@@ -49,8 +49,8 @@ public class Maracas extends MaxObject {
         currTime = System.currentTimeMillis();
         lastTime = currTime;
         dt = 0;
-        tempoFactor = 4f;
-        aWheel = new Shell(this);
+
+        aShell = new Shell(this);
         
         width = 50;
         height = 50;
@@ -69,6 +69,10 @@ public class Maracas extends MaxObject {
         sketch.send("gldisable","depth_test");
         sketch.send("glloadidentity");
         
+        // allow transparency
+        sketch.send("glenable","blend");
+        sketch.send("glblendfunc",new String[]{"src_alpha", "one_minus_src_alpha"});
+
         
     }
     
@@ -83,13 +87,13 @@ public class Maracas extends MaxObject {
     }
 
     public void setMass(float m){
-        aWheel.aSeed.setMass(m);
+        aShell.aSeed.setMass(m);
     }
     public void setStiffness(float s){
-        aWheel.aSeed.setStiffness(s);
+        aShell.aSeed.setStiffness(s);
     }    
     public void setDamping(float d){
-        aWheel.aSeed.setDamping(d);
+        aShell.aSeed.setDamping(d);
     }
     
     public void bang() {
@@ -110,7 +114,7 @@ public class Maracas extends MaxObject {
     
     public void tatum(){
         
-        aWheel.newTatum();
+        aShell.newTatum();
     }
     
 
@@ -123,17 +127,16 @@ public class Maracas extends MaxObject {
         currTime = System.currentTimeMillis();
         dt = (currTime - lastTime);
         lastTime = currTime;
-        aWheel.update();
+        aShell.update();
     }
 
     private void draw() {
         sketch.send("reset");
-        aWheel.draw();
+        aShell.draw();
         render.send("erase");
         render.send("drawclients");
         render.send("swap");
         
-
     }
 
     public void notifyDeleted() {
@@ -151,7 +154,7 @@ public class Maracas extends MaxObject {
         float glX = (mouseX / width) * 1.62f  - 0.82f;
         float glY = -((mouseY / height) * 1.7f - 0.85f) ;
         //post("mouse gl " + glX + " " + glY);
-        aWheel.setCoord(glX, glY);
+        aShell.setCoord(glX, glY);
     }
     
     public void camera(float x, float y, float z){
@@ -159,13 +162,17 @@ public class Maracas extends MaxObject {
     }
     
     public void printCoords(){
-        post("wheel " + aWheel.x + " " + aWheel.y);
-        post("note " + aWheel.aSeed.x + " " + aWheel.aSeed.y);
+        post("wheel " + aShell.x + " " + aShell.y);
+        post("note " + aShell.aSeed.x + " " + aShell.aSeed.y);
     }
     
-    // --------------------- Controls ---------------------
     public void fill(int f) {
-        aWheel.fill = f;
+        aShell.fill = f;
     }
+
+    /* ----------------
+     * OPENGL STUFF
+     * ----------------
+     */
 
 }
