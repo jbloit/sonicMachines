@@ -19,31 +19,45 @@ public class Shell {
     public Seed aSeed;
     public float x,y;
     public int nbSeeds;
-    public Color[] palette;
+    public Color color;
+    public int pitch;                // midi pitch
     
     
-    public Shell(Maracas _parent) {
+    public Shell(Maracas _parent, Color _color) {
         x = 0f;
         y = 0f;
         maxobj = _parent;
         fill = 0;
-        nbSeeds = 4;
-        
-        palette = new Color[4];
-        palette[0] = new Color (255, 116, 00, 200);
-        palette[1] = new Color (191, 48, 48, 200);
-        palette[2] = new Color (0, 153, 153, 200);
-        palette[3] = new Color (0, 204, 0, 200);
+        nbSeeds = 5;
+
+        color = _color;
         
         seeds = new ArrayList();
         for (int i = 0; i < nbSeeds; i++){
             
             Seed s = new Seed(maxobj, i);
-            s.seedColor = palette[i];
+            s.seedColor = color;
             seeds.add(s);
             
-            
         }  
+    }
+    
+    
+    public void setPitch(int _pitch){
+        Seed s;
+        for (int i=0; i<nbSeeds; i++){
+            s = (Seed) seeds.get(i);
+            s.pitch = _pitch;
+        }
+        
+    }
+    
+    public void setMass(float _mass){
+        Seed s;
+        for(int i = 0; i<nbSeeds; i++){
+            s = (Seed) seeds.get(i);
+            s.setMass( _mass * (1f + i * 0.1f) );
+        }
     }
     
     public void setCoord(float _x, float _y){
@@ -79,8 +93,9 @@ public class Shell {
             n = (Seed) seeds.get(i);
             n.draw();
         }
+        
         maxobj.sketch.send("glcolor" , new float[] {1, 1, 1, 1});
-        drawCircle(x,y,0.1f, 20, true);
+        drawCircle(x,y,0.05f, 20, true);
         //maxobj.sketch.send("glpopmatrix");
     }
     

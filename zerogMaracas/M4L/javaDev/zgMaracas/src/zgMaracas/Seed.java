@@ -35,6 +35,7 @@ public class Seed {
     private int triggerPeriod;          // how many tatum ticks between notes
     private float stretch;              // distance to shell center 
     
+    public int pitch;                   // midi pitch
     
     
     private Random rand;
@@ -58,6 +59,8 @@ public class Seed {
         tatum = -1;
         triggerPeriod = 1;             
         stretch = 0;
+        pitch = 60;
+        
     }
     
     public void setMass(float _mass){
@@ -74,7 +77,7 @@ public class Seed {
     public   void tick(){
         // get audio repitching factor from color value
         float playbackRate = (seedColor.getRed() + seedColor.getGreen() + seedColor.getBlue()) * 2 / 765;
-        maxobj.outletHigh(1, "tick " + " " + index + " " + playbackRate);
+        maxobj.outletHigh(1, "tick " + " " + pitch + " " + stretch);
   }
   
   
@@ -109,7 +112,7 @@ public class Seed {
     // with a new tatum event (smallest beat grid), decide whether to trigger a note or not.
     public void newTatum(){
         tatum++;
-        if (stretch > 0.1f) {
+        if (stretch > 0.01f) {
             if ((tatum % triggerPeriod) == 0) {
                 tick();
                 tatum = 0;
@@ -130,7 +133,7 @@ public class Seed {
     
     
     /* ----------------------------
-     *  LOW LEVEL DRAWING 
+     *  OPENGL DRAWING 
      * ----------------------------
      */
     

@@ -7,6 +7,7 @@ package zgMaracas;
 import com.cycling74.max.*;
 import java.util.ArrayList;
 import com.cycling74.jitter.*;
+import java.awt.Color;
 
 /**
  *
@@ -25,6 +26,10 @@ public class Maracas extends MaxObject {
     public int width;
     public int height;
     private String windowName;
+    
+    public Shell[] shells;
+    
+    public Color[] palette;
 
     public Maracas(Atom[] args) {
 
@@ -50,10 +55,27 @@ public class Maracas extends MaxObject {
         lastTime = currTime;
         dt = 0;
 
-        aShell = new Shell(this);
+        
         
         width = 50;
         height = 50;
+        
+//        aShell = new Shell(this);
+        
+        palette = new Color[4];
+        palette[0] = new Color (255, 116, 00, 200);
+        palette[1] = new Color (191, 48, 48, 200);
+        palette[2] = new Color (0, 153, 153, 200);
+        palette[3] = new Color (0, 204, 0, 200);
+        
+        shells = new Shell[4];
+        shells[0] = new Shell(this, palette[0]);
+        shells[1] = new Shell(this, palette[1]);
+        shells[2] = new Shell(this, palette[2]);
+        shells[3] = new Shell(this, palette[3]);
+        
+
+        
     }
     
     public void init(){
@@ -86,15 +108,20 @@ public class Maracas extends MaxObject {
         height = (int) (rect[3] - rect[1]);   
     }
 
-    public void setMass(float m){
-        aShell.aSeed.setMass(m);
+    public void setMass(int shellIndex, float m){
+            shells[shellIndex].setMass(m);
     }
-    public void setStiffness(float s){
-        aShell.aSeed.setStiffness(s);
-    }    
-    public void setDamping(float d){
-        aShell.aSeed.setDamping(d);
+    
+    public void setPitch(int shellIndex, int n){
+            shells[shellIndex].setPitch(n);
     }
+    
+//    public void setStiffness(float s){
+//        aShell.aSeed.setStiffness(s);
+//    }    
+//    public void setDamping(float d){
+//        aShell.aSeed.setDamping(d);
+//    }
     
     public void bang() {
 
@@ -114,7 +141,9 @@ public class Maracas extends MaxObject {
     
     public void tatum(){
         
-        aShell.newTatum();
+        for (int i = 0; i<4; i++){
+            shells[i].newTatum();
+        }
     }
     
 
@@ -127,12 +156,17 @@ public class Maracas extends MaxObject {
         currTime = System.currentTimeMillis();
         dt = (currTime - lastTime);
         lastTime = currTime;
-        aShell.update();
+        
+        for (int i = 0; i<4; i++){
+            shells[i].update();
+        }
     }
 
     private void draw() {
         sketch.send("reset");
-        aShell.draw();
+        for (int i = 0; i<4; i++){
+            shells[i].draw();
+        }
         render.send("erase");
         render.send("drawclients");
         render.send("swap");
@@ -150,11 +184,11 @@ public class Maracas extends MaxObject {
         
     }
 
-    public void onDrag(float mouseX, float mouseY){   
+    public void onDrag(int shellIndex, float mouseX, float mouseY){   
         float glX = (mouseX / width) * 1.62f  - 0.82f;
         float glY = -((mouseY / height) * 1.7f - 0.85f) ;
         //post("mouse gl " + glX + " " + glY);
-        aShell.setCoord(glX, glY);
+        shells[shellIndex].setCoord(glX, glY);
     }
     
     public void camera(float x, float y, float z){
@@ -166,9 +200,7 @@ public class Maracas extends MaxObject {
         post("note " + aShell.aSeed.x + " " + aShell.aSeed.y);
     }
     
-    public void fill(int f) {
-        aShell.fill = f;
-    }
+
 
     /* ----------------
      * OPENGL STUFF
