@@ -47,7 +47,7 @@ public class Shell {
         Seed s;
         for (int i=0; i<nbSeeds; i++){
             s = (Seed) seeds.get(i);
-            s.pitch = _pitch;
+            s.pitch = _pitch + (i*3); // dim scale
         }
         
     }
