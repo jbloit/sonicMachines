@@ -16,7 +16,7 @@ public class Shell {
     private Maracas maxobj;
     public int fill;
     public ArrayList seeds;
-    public Seed aSeed;
+ 
     public float x,y;
     public int nbSeeds;
     public Color color;
@@ -35,7 +35,7 @@ public class Shell {
         seeds = new ArrayList();
         for (int i = 0; i < nbSeeds; i++){
             
-            Seed s = new Seed(maxobj, i);
+            Seed s = new Seed(maxobj, this, i);
             s.seedColor = color;
             seeds.add(s);
             
@@ -44,11 +44,13 @@ public class Shell {
     
     
     public void setPitch(int _pitch){
-        Seed s;
-        for (int i=0; i<nbSeeds; i++){
-            s = (Seed) seeds.get(i);
-            s.pitch = _pitch + (i*3); // dim scale
-        }
+        
+        this.pitch  = _pitch;
+//        Seed s;
+//        for (int i=0; i<nbSeeds; i++){
+//            s = (Seed) seeds.get(i);
+//            s.pitch = _pitch ; // dim scale
+//        }
         
     }
     

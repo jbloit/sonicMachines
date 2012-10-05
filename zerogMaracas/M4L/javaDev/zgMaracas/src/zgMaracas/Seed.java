@@ -12,7 +12,7 @@ import java.util.Random;
 public class Seed {
 
     private Maracas maxobj;
-
+    private Shell parent;
     private int index;
     private float rv;                   // rotation velocity
     public float x, y;
@@ -40,9 +40,10 @@ public class Seed {
     
     private Random rand;
     
-    public Seed(Maracas _maxobj, int _index) {
+    public Seed(Maracas _maxobj, Shell _parent, int _index) {
         
         maxobj = _maxobj;
+        parent = _parent;
         rand = new Random();
        
 
@@ -59,7 +60,7 @@ public class Seed {
         tatum = -1;
         triggerPeriod = 1;             
         stretch = 0;
-        pitch = 60;
+        pitch = 0; // relative to the pitch of parent shell
         
     }
     
@@ -77,7 +78,7 @@ public class Seed {
     public   void tick(){
         // get audio repitching factor from color value
         float playbackRate = (seedColor.getRed() + seedColor.getGreen() + seedColor.getBlue()) * 2 / 765;
-        maxobj.outletHigh(1, "tick " + " " + pitch + " " + stretch);
+        maxobj.outletHigh(1, "tick " + " " + (parent.pitch + this.pitch) + " " + stretch);
   }
   
   

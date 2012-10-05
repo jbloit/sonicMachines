@@ -113,15 +113,32 @@ public class Maracas extends MaxObject {
     }
     
     public void setPitch(int shellIndex, int n){
+            
             shells[shellIndex].setPitch(n);
     }
     
+//    public void setScale(int shellIndex, int interval_0, int interval_1, int interval_2, int interval_3, int interval_4){
+ 
+    public void setScale(Atom[] args){
+        
+        Atom a;
+        
+        Shell s = shells[args[0].toInt()];
+        
+        for (int i = 1; i<args.length; i++){
+            Seed sd = (Seed) s.seeds.get(i-1);
+            sd.pitch = args[i].toInt();     // relative pitch
+        }
+
+    }
+        
 //    public void setStiffness(float s){
 //        aShell.aSeed.setStiffness(s);
 //    }    
 //    public void setDamping(float d){
 //        aShell.aSeed.setDamping(d);
 //    }
+        
     
     public void bang() {
 
@@ -195,10 +212,7 @@ public class Maracas extends MaxObject {
         render.send("camera",new float[]{x,y,z});
     }
     
-    public void printCoords(){
-        post("wheel " + aShell.x + " " + aShell.y);
-        post("note " + aShell.aSeed.x + " " + aShell.aSeed.y);
-    }
+
     
 
 
