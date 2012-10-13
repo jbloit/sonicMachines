@@ -26,7 +26,7 @@ public class Maracas extends MaxObject {
     public int width;
     public int height;
     private String windowName;
-    
+    private boolean drawFlag;
     public Shell[] shells;
     
     public Color[] palette;
@@ -55,7 +55,7 @@ public class Maracas extends MaxObject {
         lastTime = currTime;
         dt = 0;
 
-        
+        drawFlag = true;
         
         width = 50;
         height = 50;
@@ -80,8 +80,6 @@ public class Maracas extends MaxObject {
     
     public void init(){
         updateSize();
-        
-        post("new new init");
         render.send("erase_color", new float[]{0.f, 0.f, 0.f, 1.f});
         render.setAttr("ortho", 1);
         sketch.send("glmatrixmode","projection");
@@ -146,14 +144,16 @@ public class Maracas extends MaxObject {
         // given that bang is called by HI (via metro for ex).
 
         update();
-        qelem.set();
-        /*schedule the function draw to
-         be executed by the low priority thread.
-         if it is already set do not schedule it 
-         again. The draw function was specified 
-         as the qelem function when we created the 
-         MaxQelem qelem in the construtctor
-         */
+        if (drawFlag) {
+            qelem.set();
+            /*schedule the function draw to
+             be executed by the low priority thread.
+             if it is already set do not schedule it 
+             again. The draw function was specified 
+             as the qelem function when we created the 
+             MaxQelem qelem in the construtctor
+             */
+        }
     }
     
     public void tatum(){
@@ -213,7 +213,13 @@ public class Maracas extends MaxObject {
     }
     
 
-    
+    public void doDraw(int _drawFlag){
+        if (_drawFlag > 0){
+            drawFlag = true;
+        } else {
+            drawFlag = false;
+        }
+    }
 
 
     /* ----------------
