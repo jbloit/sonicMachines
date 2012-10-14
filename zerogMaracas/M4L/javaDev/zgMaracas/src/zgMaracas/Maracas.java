@@ -180,6 +180,7 @@ public class Maracas extends MaxObject {
     }
 
     private void draw() {
+  
         sketch.send("reset");
         for (int i = 0; i<4; i++){
             shells[i].draw();
@@ -187,7 +188,7 @@ public class Maracas extends MaxObject {
         render.send("erase");
         render.send("drawclients");
         render.send("swap");
-        
+         
     }
 
     public void notifyDeleted() {
