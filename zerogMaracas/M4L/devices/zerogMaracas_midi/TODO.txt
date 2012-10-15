@@ -1,0 +1,27 @@
+******* FOR INITIAL RELEASE
+FIXES 
+- see if an LCD version fixes the display crash
+- check if previous versions had the display crash
+- check if smaller motion tables allow pattr use
+	YES
+	if so, study table compression method (spline?)
+- can a table at least be recorded in set?
+	YES with a pattr attached to it.
+- init mass, note, and beat values
+- change device name
+- ignore updates when transport is not running
+
+COSMETICS
+- nicer color palette
+- give more cohesion to control panel
+
+DOC
+- new video and page, consistant with release
+
+
+******* FOR FUTURE RELEASES
+NEW FEATURES
+- add a clear scene button
+- add a copy scene button
+- add a bouncing mode
+- add a mapping mode to other parameters
