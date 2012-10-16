@@ -2,6 +2,7 @@
 FIXES 
 - see if an LCD version fixes the display crash
 - check if previous versions had the display crash
+	YES
 - change device name
 - ignore updates when transport is not running
 
@@ -19,3 +20,4 @@ NEW FEATURES
 - add a copy scene button
 - add a bouncing mode
 - add a mapping mode to other parameters
+- add a non-quantized mode and trigger only with direction change
