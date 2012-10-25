@@ -83,9 +83,10 @@ function paint()
             post("shell " + i + " x " +  shellCoords[i][0] + " y " + shellCoords[i][1] + "\n");
 			with (mgraphics) {
 				set_source_rgba(colorarray[i][0], colorarray[i][1], colorarray[i][2],colorarray[i][3]);
-				ellipse(shellCoords[i][0], shellCoords[i][1], shellSizes[i], shellSizes[i]);
+                radius = shellSizes[i]/2;
+				ellipse(shellCoords[i][0]-radius, shellCoords[i][1]-radius, shellSizes[i], shellSizes[i]);
                 for (j = 0; j<nbGritsPerShell; j++){
-                    ellipse(gritCoords[i][2*j], gritCoords[i][2*j + 1], shellSizes[i], shellSizes[i]);
+                    ellipse(gritCoords[i][2*j]-radius, gritCoords[i][2*j + 1]-radius, shellSizes[i], shellSizes[i]);
                 }
 				fill();
 			}
