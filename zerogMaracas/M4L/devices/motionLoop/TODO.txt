@@ -1,10 +1,11 @@
 ******* FOR INITIAL RELEASE
 FIXES 
-- see if an LCD version fixes the display crash
-- check if previous versions had the display crash
-	YES
-- change device name
+
 - ignore updates when transport is not running
+
+- init masses to 33
+
+
 
 COSMETICS
 - nicer color palette
@@ -12,6 +13,7 @@ COSMETICS
 
 DOC
 - new video and page, consistant with release
+- add twitter link to jbloit.com
 
 
 ******* FOR FUTURE RELEASES
@@ -24,3 +26,5 @@ NEW FEATURES
 
 VERSION JSUI
 - output draw commands directly as lists instead of strings
+- same with java outputs
+- clean up code about color in java

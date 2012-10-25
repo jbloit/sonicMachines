@@ -21,6 +21,7 @@ public class Shaker {
     public int nbParticles;
     public Color color;
     public float mass;
+    public float stiffness;
     public int pitch;                // midi pitch
     
     
@@ -60,6 +61,15 @@ public class Shaker {
         for(int i = 0; i<nbParticles; i++){
             s = (Particle) particles.get(i);
             s.setMass( _mass * (1f + i * 0.1f) );
+        }
+    }
+    
+    public void setStiffness(float _stiffness){
+        Particle s;
+        this.stiffness = _stiffness;
+        for(int i = 0; i<nbParticles; i++){
+            s = (Particle) particles.get(i);
+            s.setStiffness( _stiffness );
         }
     }
     

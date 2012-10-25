@@ -45,7 +45,7 @@ public class Particle {
         maxobj = _maxobj;
         parent = _parent;
         rand = new Random();
-       
+        index = _index;
 
         particleColor = new Color(255, 255, 255, 100); // default
         
@@ -74,8 +74,8 @@ public class Particle {
     // send a control event
     public   void tick(){
         // get audio repitching factor from color value
-        float playbackRate = (particleColor.getRed() + particleColor.getGreen() + particleColor.getBlue()) * 2 / 765;
-        maxobj.outletHigh(1, "tick " + " " + (parent.pitch + this.pitch) + " " + stretch);
+        //float playbackRate = (particleColor.getRed() + particleColor.getGreen() + particleColor.getBlue()) * 2 / 765;
+        maxobj.outletHigh(1, "tick " + " " + (parent.pitch + this.pitch) + " " + (stretch*mass));
   }
   
   
@@ -100,17 +100,22 @@ public class Particle {
         stretch = (float) Math.sqrt(xdist*xdist + ydist*ydist);
         
         // trigger more for higher strecth value 
+        stretch = stretch * 8 / maxobj.width;       // scale to fit mapping function below
         triggerPeriod = (int) Math.abs (Math.exp(-stretch + 4) + 1);
         //triggerPeriod = (int) (-4*stretch)+20;
 
-        //maxobj.outlet(0, "triggerPeriod " + triggerPeriod);
+        // high clip (watch mapping curve before making changes to this thresh)
+        if (triggerPeriod > 50) triggerPeriod = -1; // flag value
+        
+        // to comment out after tuning :
+        //maxobj.outletHigh(1, "triggerPeriod " + index + " " + triggerPeriod);
 
     }
     
     // with a new tatum event (smallest beat grid), decide whether to trigger a note or not.
     public void newTatum(){
         tatum++;
-        if (stretch > 0.01f) {
+        if (triggerPeriod > 0) {
             if ((tatum % triggerPeriod) == 0) {
                 tick();
                 tatum = 0;

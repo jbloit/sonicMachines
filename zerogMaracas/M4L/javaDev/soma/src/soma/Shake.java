@@ -25,6 +25,7 @@ public class Shake extends MaxObject {
     private boolean drawFlag;
     public Shaker[] shakers;
     public Color[] palette;
+    public float triggerSensitivity;
 
     public Shake(Atom[] args) {
         declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
@@ -45,6 +46,9 @@ public class Shake extends MaxObject {
         width = 50;
         height = 50;
 
+        triggerSensitivity = 10f;
+        
+        
 //        aShell = new Shell(this);
 
         palette = new Color[4];
@@ -67,12 +71,13 @@ public class Shake extends MaxObject {
 
     private void updateSize() {
 //        // determine size of jit.pwindow
-//        MaxBox myWin;
-//        myWin = (MaxBox) this.getParentPatcher().getNamedBox(windowName);
-//        int[] rect;
-//        rect = myWin.getRect();
-//        width = (int) (rect[2] - rect[0]);
-//        height = (int) (rect[3] - rect[1]);
+        MaxBox myWin;
+        myWin = (MaxBox) this.getParentPatcher().getNamedBox(windowName);
+        int[] rect;
+        rect = myWin.getRect();
+        width = (int) (rect[2] - rect[0]);
+        height = (int) (rect[3] - rect[1]);
+        post("w " + width + " h " + height);
     }
 
     public double getDt() {
@@ -93,25 +98,30 @@ public class Shake extends MaxObject {
     public void setMass(int shakerIndex, float m) {
         shakers[shakerIndex].setMass(m);
     }
-    public void setPitch(int shakerIndex, int n){
-            
-            shakers[shakerIndex].setPitch(n);
-    }
     
+    public void setStiffness(int shakerIndex, float s) {
+        shakers[shakerIndex].setStiffness(s);
+    }
+
+    public void setPitch(int shakerIndex, int n) {
+
+        shakers[shakerIndex].setPitch(n);
+    }
+
 //    public void setScale(int shellIndex, int interval_0, int interval_1, int interval_2, int interval_3, int interval_4){
- 
-    public void setScale(Atom[] args){
-        
+    public void setScale(Atom[] args) {
+
         Atom a;
-        
+
         Shaker s = shakers[args[0].toInt()];
-        
-        for (int i = 1; i<args.length; i++){
-            Particle p = (Particle) s.particles.get(i-1);
+
+        for (int i = 1; i < args.length; i++) {
+            Particle p = (Particle) s.particles.get(i - 1);
             p.pitch = args[i].toInt();     // relative pitch
         }
 
     }
+
     private void draw() {
 
         for (int i = 0; i < 4; i++) {
@@ -131,7 +141,7 @@ public class Shake extends MaxObject {
             shakers[i].newTatum();
         }
     }
-    
+
     public void notifyDeleted() {
         qelem.release();
         //release the native resources associated
@@ -156,6 +166,12 @@ public class Shake extends MaxObject {
         }
     }
 
+    public void sensitivity(float ts){
+        
+        if (ts > 0.1f) this.triggerSensitivity = ts;
+        
+    }
+    
     public void bang() {
 
         // goal : keep update() in high-priority thread, and draw() in low.
