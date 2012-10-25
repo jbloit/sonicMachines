@@ -116,16 +116,22 @@ public class Shake extends MaxObject {
 
         for (int i = 0; i < 4; i++) {
             Shaker s = shakers[i];
-            String toJsui = new String(i + " " + s.mass + " " + s.x + " " + s.y);
+            StringBuilder toJsui = new StringBuilder(46);
+            toJsui.append(i + " " + s.mass + " " + (int) s.x + " " + (int) s.y);
             for (int j = 0; j < s.nbParticles; j++) {
                 Particle p = (Particle) s.particles.get(j);
-                toJsui.concat(" " + p.x + " " + p.y);
+                toJsui.append(" " + (int) p.x + " " + (int) p.y);
             }
-
-            outlet(0, toJsui);
+            outlet(0, toJsui.toString());
         }
     }
 
+    public void tatum() {
+        for (int i = 0; i < 4; i++) {
+            shakers[i].newTatum();
+        }
+    }
+    
     public void notifyDeleted() {
         qelem.release();
         //release the native resources associated

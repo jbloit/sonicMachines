@@ -84,6 +84,9 @@ function paint()
 			with (mgraphics) {
 				set_source_rgba(colorarray[i][0], colorarray[i][1], colorarray[i][2],colorarray[i][3]);
 				ellipse(shellCoords[i][0], shellCoords[i][1], shellSizes[i], shellSizes[i]);
+                for (j = 0; j<nbGritsPerShell; j++){
+                    ellipse(gritCoords[i][2*j], gritCoords[i][2*j + 1], shellSizes[i], shellSizes[i]);
+                }
 				fill();
 			}
 		}

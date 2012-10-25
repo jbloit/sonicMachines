@@ -21,3 +21,6 @@ NEW FEATURES
 - add a bouncing mode
 - add a mapping mode to other parameters
 - add a non-quantized mode and trigger only with direction change
+
+VERSION JSUI
+- output draw commands directly as lists instead of strings
