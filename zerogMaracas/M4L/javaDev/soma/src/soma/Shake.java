@@ -52,7 +52,7 @@ public class Shake extends MaxObject {
 //        aShell = new Shell(this);
 
         palette = new Color[4];
-        palette[0] = new Color(255, 116, 00, 200);
+        palette[0] = new Color(255, 116, 0, 200);
         palette[1] = new Color(191, 48, 48, 200);
         palette[2] = new Color(0, 153, 153, 200);
         palette[3] = new Color(0, 204, 0, 200);
